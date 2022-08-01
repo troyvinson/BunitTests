@@ -1,0 +1,56 @@
+﻿@page "/samplepages/userrights"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using System.Globalization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>UserRights</h3>
+
+<AuthorizeView>
+    <h1>Hi @userName, you have these claims and rights:</h1>
+</AuthorizeView>
+<ul id="thelist">
+    <AuthorizeView>
+        @foreach (var claim in @context.User.FindAll(x => x.Type != ClaimTypes.Name && x.Type != ClaimTypes.Role))
+        {
+            <li>@GetClaimName(claim): @claim.Value</li>
+        }
+    </AuthorizeView>
+    <AuthorizeView Roles="superuser">
+        <li>You have the role SUPER USER</li>
+    </AuthorizeView>
+    <AuthorizeView Roles="admin">
+        <li>You have the role ADMIN</li>
+    </AuthorizeView>
+    <AuthorizeView Policy="content-editor">
+        <li>You are a CONTENT EDITOR</li>
+    </AuthorizeView>
+    <AuthorizeView>
+        @if (context.User.Identity?.AuthenticationType == "custom-auth-type")
+        {
+            <li>You have the authentication type CUSTOM AUTH TYPE</li>
+        }
+    </AuthorizeView>
+</ul>
+
+@code
+{
+    private string userName = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (state is not null && state.User is not null && state.User.Identity is not null)
+        {
+            userName = state.User.Identity.Name is not null ? state.User.Identity.Name : string.Empty;
+        }
+    }
+
+    private static string GetClaimName(Claim claim)
+    {
+        var claimType = new Uri(claim.Type);
+        var name = claimType.Segments.Last();
+        return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(name);
+    }
+}

@@ -1,0 +1,12 @@
+﻿@page "/samplepages/acceptseventcallbackparams"
+
+<h3>AcceptsEventCallbackParams</h3>
+
+@code {
+  [Parameter]
+  public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+  [Parameter]
+  public EventCallback OnSomething { get; set; }
+
+}

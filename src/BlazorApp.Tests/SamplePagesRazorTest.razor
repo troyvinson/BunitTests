@@ -1,0 +1,32 @@
+﻿@using BlazorApp.Pages.SamplePages
+
+@inherits BunitTestContext
+
+@code {
+    [Test]
+    public void ComponentRendersCorrectly()
+    {
+        var cut = Render(@<RendersComponent />);
+        // Assert
+        cut.MarkupMatches(@<h3>Sample Page - RendersComponent</h3>
+    );
+    }
+
+    [Test]
+    public void AcceptsNonBlazorTypesParams()
+    {
+        var lines = new List<string> { "Tom", "Brian", "Jason" };
+        var cut = Render(@<AcceptsNonBlazorTypesParams Numbers="42" Lines="lines" />);
+    }
+
+    [Test]
+    public void AcceptsEventCallbackParams()
+    {
+        Action<MouseEventArgs> onClickHandler = _ => { };
+        Action onSomethingHandler = () => { };
+
+        var cut = Render(@<AcceptsEventCallbackParams OnClick="onClickHandler" OnSomething="onSomethingHandler" />);
+    }
+
+
+}

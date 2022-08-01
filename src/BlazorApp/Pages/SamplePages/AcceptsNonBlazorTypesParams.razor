@@ -1,0 +1,15 @@
+﻿@page "/samplepages/acceptsnonblazortypesparams"
+
+<h3>AcceptsNonBlazorTypesParams</h3>
+
+<p id="numbers">@Numbers</p>
+<p id="lines">@string.Concat(Lines)</p>
+
+@code {
+    [Parameter]
+    public int Numbers { get; set; }
+
+    [Parameter]
+    public List<string> Lines { get; set; } = new List<string>();
+
+}
